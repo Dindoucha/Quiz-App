@@ -1,0 +1,60 @@
+{% extends "base.html" %} {% block title %} Home {%endblock title %} {% block
+  content %}
+  {% if user.is_teacher %}
+  <div class="row">
+    <div class="col-lg-3 col-md-4 col-sm-5">
+      <a href="/create_sequence" class="btn btn-primary mt-3">Ajouter sequence</a>
+    </div>
+    <div class="col-lg-3 col-md-4 col-sm-5">
+      <a href="/question" class="btn btn-primary mt-3">Ajouter question</a>
+    </div>
+    <div class="col-lg-3 col-md-4 col-sm-5">
+      <a href="/questionspanel" class="btn btn-primary mt-3">Questions Panel</a>
+    </div>
+    <div class="col-lg-3 col-md-4 col-sm-5">
+      <a href="/suequencespanel" class="btn btn-primary mt-3">Sequences Panel</a>
+    </div>
+    <div class="col-lg-3 col-md-4 col-sm-5">
+      <a href="/user_panel" class="btn btn-primary mt-3">Students Panel</a>
+    </div>
+    <div class="col-lg-3 col-md-4 col-sm-5">
+      <a href="/stats" class="btn btn-primary mt-3">Statistics</a>
+    </div>
+    <div class="col-lg-3 col-md-4 col-sm-5">
+      <a href="/controles" class="btn btn-primary mt-3">Generer controles</a>
+    </div>
+    <div class="col-lg-3 col-md-4 col-sm-5">
+      <a href="/controles_panel" class="btn btn-primary mt-3">Controles Panel</a>
+    </div>
+  </div>
+  {% else %}
+  <!-- Do something for non-teachers -->
+  {% endif %}
+  
+  <h1>Enter Sequence Identifiant</h1>
+  <div class="input-group mb-3">
+    <input type="text" class="form-control" placeholder="Enter Sequence Identifiant" id="sequenceinput">
+    <div class="input-group-append">
+      <button id="sequence" class="btn btn-outline-success" type="button">Submit</button>
+    </div>
+  </div>
+  <h1>Enter Question Identifiant</h1>
+  <div class="input-group mb-3">
+    <input type="text" class="form-control" placeholder="Enter Question Identifiant" id="questioninput">
+    <div class="input-group-append">
+      <button class="btn btn-outline-success" id="question" type="button">Submit</button>
+    </div>
+  </div>
+  <script>
+    $("#question").click(function() {
+      const inputValue = $("#questioninput").val().trim();
+      location.href = window.location.origin + "/show_question?code=" + inputValue;
+    });
+    $("#sequence").click(function() {
+      const inputValue = $("#sequenceinput").val().trim();
+      location.href = window.location.origin + "/show_question?sequence=" + inputValue;
+    });
+  
+  </script>
+  {%endblock content %}
+  

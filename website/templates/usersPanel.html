@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %} Students Panel {%endblock title %}
+{% block content %}
+
+<form method="post" enctype=multipart/form-data>
+  <div class="input-group mt-3 mb-3">
+    <div class="custom-file">
+      <input type="file" name="file" class="custom-file-input" id="user_csv" accept=".csv" required>
+      <label class="custom-file-label" name="csvFile" id="user_csvLabel" for="user_csv">Enter Students csv file</label>
+    </div>
+    <div class="input-group-append">
+      <button class="btn btn-outline-success" type="submit">Submit</button>
+    </div>
+  </div>
+</form>
+<script>
+  document.getElementById("user_csv").addEventListener("change", function() {
+    var fileName = document.getElementById("user_csv").value.split("\\").pop();
+    document.getElementById("user_csvLabel").innerHTML = fileName;
+  });
+
+</script>
+
+<table class="table table-striped table-hover">
+  <thead>
+    <tr>
+      <th scope="col">Student Email</th>
+      <th scope="col">First name</th>
+      <th scope="col">Last name</th>
+
+    </tr>
+  </thead>
+  <tbody>
+    {%for user in users%}
+    <tr>
+      <th scope="row">{{user.email}}</th>
+      <td>{{user.first_name}}</td>
+      <td>{{user.last_name}}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{%endblock content %}

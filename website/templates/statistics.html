@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+{% block title %} Statistics {%endblock title %}
+{% block content %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.0/dist/chart.min.js"></script>
+  <div class="container mt-5">
+    <h1>Statistics</h1>
+    <form>
+        <div class="form-group">
+            <label for="questionCode">Question Code:</label>
+            <input type="text" id="questionCode" name="questionCode" class="form-control">
+        </div>
+        <div class="form-group">
+            <label for="studentCode">Student Code:</label>
+            <input type="text" id="studentCode" name="studentCode" class="form-control">
+        </div>
+        <div class="form-group">
+            <label for="sequenceCode">Sequence Code:</label>
+            <input type="text" id="sequenceCode" name="sequenceCode" class="form-control">
+        </div>
+        <button type="submit" class="btn btn-primary">Filter</button>
+    </form>
+    <div class="mt-5">
+        <canvas id="myChart"></canvas>
+    </div>
+    <div class="mt-5">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Question Identifiant</th>
+                    <th>Student Identifiant</th>
+                    <th>Sequence Identifiant</th>
+                    <th>Percentage Correct</th>
+                </tr>
+            </thead>
+            <tbody id="dataTable">
+            </tbody>
+        </table>
+    </div>
+</div>
+    <script>
+        $(document).ready(function() {
+            // Submit the form when the filter button is clicked
+            $('form').submit(function(event) {
+                event.preventDefault();
+                var questionCode = $('#questionCode').val();
+                var studentCode = $('#studentCode').val();
+                var sequenceCode = $('#sequenceCode').val();
+                var url = '/statistics';
+                if (questionCode) {
+                    url += '?question=' + questionCode;
+                }
+                if (studentCode) {
+                    url += '?student=' + studentCode;
+                }
+                if (sequenceCode) {
+                    url += '?sequence=' + sequenceCode;
+                }
+                $.getJSON(url, function(data) {
+    // Extract the labels and data from the data returned by the endpoint
+    console.log(data);
+    var labels = data.map(function(item) {
+        return item.date;
+    });
+    var dataValues = data.map(function(item) {
+        return item.percentage_correct;
+    });
+    var oldChart = Chart.getChart("myChart");
+
+    // If an old chart exists, destroy it
+    if (oldChart) {
+      oldChart.destroy();
+    }
+    // Create the chart
+    var ctx = document.getElementById('myChart').getContext('2d');
+    var chart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Percentage of Correct Answers',
+                data: dataValues,
+                backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    min: 0,
+                    max: 100,
+                    ticks: {
+                        callback: function(value) {
+                            return value + '%';
+                        }
+                    }
+                }
+            }
+        }
+    });
+
+          // Populate the table with data
+          var dataTable = $('#dataTable');
+          dataTable.empty();
+          data.forEach(function(item) {
+            var row = $('<tr>');
+            row.append($('<td>').text(item.date));
+            row.append($('<td>').text(item.question_code));
+            row.append($('<td>').html(`<a href="${item.question_code !== "" ? '/correction?code=' + item.question_code+"&student="+item.student : '/correction?sequence=' + item.sequence_code + "&student="+item.student}" >${item.student}</a>`));
+            row.append($('<td>').text(item.sequence_code));
+            row.append($('<td>').text(item.percentage_correct + '%'));
+            dataTable.append(row);
+            });
+          });
+
+            });
+        });
+    </script>
+{%endblock content %}

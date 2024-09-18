@@ -1,0 +1,24 @@
+{% extends "base.html" %} {% block title %} Login {%endblock title %} {% block
+  content %}
+  <!-- ecrire pyhton in html pour le passage de variable
+       cette variable est definie dans auth.py  
+  {%if booleanVariable == False %}   yes it is true
+  {% else %} no it is not true
+  {% endif %} -->
+  <form method="POST">
+    <h3 align="center">Login</h3>
+    <div class="form-group">
+      <label for="email"> Email </label>
+      <input type="text" class="form-control" id="email" name="email" placeholder="Enter email" />
+      <!-- the name attribute allows the communication with the backend  -->
+    </div>
+  
+    <div class="form-group">
+      <label for="password"> Password</label>
+      <input type="password" class="form-control" id="password" name="password" placeholder="Enter Password" />
+    </div>
+    <br />
+    <button type="submit" class="btn btn-primary"> Login</button>
+  </form>
+  {%endblock content %}
+  

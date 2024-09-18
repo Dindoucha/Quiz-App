@@ -1,0 +1,188 @@
+{% extends "base.html" %} {% block title %} Home {%endblock title %} {% block
+  content %}
+<h1 align="center">Ajouter une question</h1>
+<div class="row">
+  <div class="col-6">
+    <form method="POST" autocomplete="off" id="addQuestionForm">
+      <div class="card">
+        <div class="card-header">
+          <h2 align="center">{{ code }}</h2>
+        </div>
+        <div class="card-body">
+          <input type="hidden" id="answer-names" name="answer-names" value="">
+          <div class="form-group">
+            <input type="text" value="{{code}}" style="display: none;" name="code">
+            <label for="title"> Title </label>
+            <input type="text" class="form-control" id="title" name="title" placeholder="Enter title" value="{{question.title if question else '' }}" />
+          </div>
+          <div class="form-group">
+            <label for="tag"> Tag </label>
+            <input type="text" list="tags" class="form-control" id="tag" value="{{tags if question else '' }}" name="tag" placeholder="Enter title" />
+            <datalist id="tags">
+              {% for tag in tags%}
+              <option value="{{tag.title}}">
+                {% endfor %}
+            </datalist>
+          </div>
+          <div class="form-group">
+            <div class="form-group">
+              <label for="content"> Content </label>
+            </div>
+            <div class="textareaContainer">
+              <textarea id="statement" name="content" id="content" class="form-control" name="content">{{question.rawContent if question else '' }}</textarea>
+            </div>
+            <br />
+            <div id="answers-container">
+            </div>
+          </div>
+        </div>
+        <div class="card-footer text-muted d-flex justify-content-around">
+          <button type="button" class="btn btn-outline-success" id="add-answer-btn">Add Answer</button>
+          <button type="button" class="btn btn-outline-warning" id="visual">visualisation</button>
+          <button type="submit" class="btn btn-primary">Submit</button>
+        </div>
+      </div>  
+    </form>
+  </div>
+  <div class="col-6">
+    <div class="card">
+      <div class="card-header text-center">
+        <h2 id="code">{{code}}</h2>
+      </div>
+      <div id="bodyContent" class="card-body">
+        
+      </div>
+      <div class="card-footer text-muted">
+        <div class="card-body">
+          <div id="answers" style="position: relative;">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>  
+<script>
+  $(document).ready(function() {
+    let answerCount = 0;
+    let answerNames = [];
+    $('#add-answer-btn').click(function() {
+      answerCount++;
+
+      let answerHtml = `
+          <div class="input-group mb-3">
+                  <div class="switch">
+                  <input type="checkbox" id="answer${answerCount}" name="answer${answerCount}" value="on">
+                  <label for="answer${answerCount}"></label>
+              </div>
+
+              <input type="text" class="form-control rounded" name="answer${answerCount}Input"/>
+              <div class="input-group-append">
+                  <button class="delete-answer-btn btn btn-outline-secondary rounded"><i class="fa fa-trash"></i></button>
+              </div>
+          </div>
+          `;
+
+      $('#answers-container').append(answerHtml);
+      answerNames.push(`answer${answerCount}`);
+      $('#answer-names').val(answerNames.join(','));
+
+    });
+
+    // Attach an event listener to the delete buttons of the existing answers
+    $('#answers-container').on('click', '.delete-answer-btn', function() {
+      $(this).closest('.input-group').remove();
+      let answerName = $(this).closest('.input-group').find('input').attr('name');
+      answerNames = answerNames.filter(name => name !== answerName);
+      $('#answer-names').val(answerNames.join(','));
+    });
+  });
+
+</script>
+<!-- Visualisation Script -->
+<script>
+  $('#visual').click(function() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const formData = new FormData($('#addQuestionForm')[0]);
+    let jsonData = {};
+    for (const key of formData.keys()) {
+      jsonData[key] = formData.get(key);
+    }
+    $.ajax({
+      url: "/visualisation",
+      contentType: "application/json",
+      dataType: 'json',
+      type: "POST",
+      data: JSON.stringify(jsonData),
+      success: function(response) {
+        $("#bodyContent").html(response.content);
+        const answers = response.answers
+        $('#answers').html("")
+          if (answers.length !== 1) {
+            const radioButtons = $.map(answers, function(answer) {
+            const radioBtn = $(`<input type="radio" name="answer" value="${answer}" >`)
+            const inputGroup = $('<div class="input-group">')
+              .append($('<div class="input-group-prepend">')
+              .append($('<div class="input-group-text">')
+              .append(radioBtn)))
+              .append($('<div class="form-control" >' + answer + '</div>'));
+            return inputGroup;
+          });
+          $('#answers').append(radioButtons);
+        } else {
+          const input = $(`<input class="form-control" value="" type="text" placeholder="Ex : 12.15 (Answer should be 2 digits after \'.\' )">`)
+          $('#answers').append($('<div class="form-group">')
+            .append(input))
+        }
+      }
+    });
+  });
+</script>
+<style>
+  .switch {
+    display: inline-block;
+    position: relative;
+    width: 50px;
+    height: 24px;
+    margin: 5px;
+  }
+
+  .switch input {
+    display: none;
+  }
+
+  .switch label {
+    margin: 0;
+    display: block;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    border-radius: 12px;
+    background-color: #ddd;
+    transition: background-color 0.3s;
+  }
+
+  .switch label:before {
+    content: "";
+    display: block;
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 20px;
+    height: 20px;
+    border-radius: 10px;
+    background-color: #fff;
+    transition: transform 0.3s;
+  }
+
+  .switch input:checked+label {
+    background-color: #3fb6d3;
+  }
+
+  .switch input:checked+label:before {
+    transform: translateX(26px);
+  }
+
+</style>
+{%endblock content %}

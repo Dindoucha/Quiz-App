@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous" />
+    <style>
+    @media print {
+        .pagebreak { page-break-before: always; }
+        .card {break-inside: avoid;}
+        * {
+        -webkit-print-color-adjust: exact !important;
+        color-adjust: exact !important;
+        }
+    }   
+    </style>
+    <title>Controles</title>
+</head>
+<body>
+    <div class="container">
+    {% autoescape false %}
+    <div class="card my-5">
+    <div class="card-header text-center">
+        <h2 id="code">{{question.code}}</h2>
+    </div>
+    <div class="card-body">
+        {{ question.HTMLcontent}}
+    </div>
+    <div class="card-footer text-muted">
+        <div class="card-body">
+        <div id="answers">
+            {% for answer in question.answers %}
+                {% if question.answers|length == 1 %}
+                <input class="form-control" value="" type="text" placeholder="Ex : 12.15 (Answer should be 2 digits after '.' )">
+                {% else %}
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <div class="input-group-text">
+                            <input type="radio" name="answer"value="{{answer.content}}">
+                        </div>
+                    </div>
+                    <div class="form-control" > {{answer.content}}</div>
+                </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+        </div>
+    </div>
+    </div>
+    {% endautoescape %}
+    </div>
+    </body>
+</html>

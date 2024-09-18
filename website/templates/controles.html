@@ -1,0 +1,191 @@
+{% extends "base.html" %}
+{% block title %} Generations des Controles {%endblock title %}
+{% block content %}
+<h1 align="center">Generations des Controles</h1>
+
+<div class="card">
+  <div class="card-body">
+    <form method="POST">
+      <div class="form-row mb-3">
+        <div class="col">
+          <select name="typeControle" id="typeControle" class="custom-select">
+            <option selected disabled>Type de Controles</option>
+            <option value="0">basique</option>
+            <option value="1">avancée</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="nbrControles">N° de sujets</label>
+        <input type="number" name="numberSujets" class="form-control" id="nbrControles" required />
+        </div>
+      <div id="controleForm">
+      </div>
+      <div class="text-center">
+        <button type="submit" class="btn btn-outline-success">Submit</button>
+      </div>
+    </form>
+  </div>
+</div>
+<script src="https://code.jquery.com/ui/1.13.0/jquery-ui.min.js"></script>
+<script>
+  function deleteRow(button) {
+    $(button).closest('tr').remove();
+  };
+  let tags = {{ tags|tojson }};
+  $("#typeControle").on('change',function(){
+
+    // Basic
+    if ($(this).val() == "0"){
+      let x = `
+      <table class="table table-striped table-bordered table-hover">
+        <thead>
+          <tr>
+            <th scope="col">Etiquette</th>
+            <th scope="col">N° de questions</th>
+            <th scope="col">Delete</th>
+          </tr>
+        </thead>
+        <tbody id="sortable">
+    `
+      for ( tag of tags){
+        x+=`
+          <tr>
+            <td>
+              <select name="tagId" class="form-control">
+                <option selected value="${tag.id}">${tag.name}</option>
+              </select>
+            </td>
+            <td>
+              <div class="input-group">
+                <input type="number" name="questionNumber" class="form-control" value="0" min="0" max="${tag.max}">
+                <div class="input-group-append">
+                  <span class="input-group-text">&nbsp;&nbsp;&nbsp;&nbsp;/${tag.max}&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                </div>
+              </div>
+            </td>
+            <td><button class="btn btn-danger" onclick="deleteRow(this)">Delete</button></td>
+          </tr>
+        `
+      }
+      x += `
+      <tr class="exclude">
+          <td>
+            Order Type
+          </td>
+          <td colspan="4">
+            <div class="col d-flex justify-content-around align-items-center">
+              <div class="custom-control custom-radio custom-control-inline">
+                <input type="radio"  id="o0" name="orderType" value="0" checked class="custom-control-input">
+                <label class="custom-control-label" for="o0">Order</label>
+              </div>
+              <div class="custom-control custom-radio custom-control-inline">
+                <input type="radio" id="o1" name="orderType" value="1"  class="custom-control-input">
+                <label class="custom-control-label" for="o1">Shuffle</label>
+              </div>
+            </div>
+          </td>
+        </tr>
+        </tbody></table>`
+      $("#controleForm").html(x)
+    }
+    // Advanced
+    else {
+      let x = `
+      <table class="table table-striped table-bordered table-hover">
+        <thead>
+          <tr>
+            <th scope="col">Etiquette</th>
+            <th scope="col">MIN N° de questions</th>
+            <th scope="col">MAX N° de questions</th>
+            <th scope="col">Delete</th>
+          </tr>
+        </thead>
+        <tbody id="sortable">
+    `
+      for ( tag of tags){
+        x+=`
+          <tr>
+            <td >
+              <select name="tagId" class="form-control">
+                <option selected  value="${tag.id}">${tag.name}</option>
+              </select>
+            </td>
+            <td>
+              <div class="input-group">
+                <input type="number" name="questionNumberMin" class="form-control" value="0" min="0" max="${tag.max}">
+                <div class="input-group-append">
+                  <span class="input-group-text">&nbsp;&nbsp;&nbsp;&nbsp;/${tag.max}&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                </div>
+              </div>
+            </td>
+            <td>
+              <div class="input-group">
+                <input type="number" name="questionNumberMax" class="form-control" value="1" min="0" max="${tag.max}">
+                <div class="input-group-append">
+                  <span class="input-group-text">&nbsp;&nbsp;&nbsp;&nbsp;/${tag.max}&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                </div>
+              </div>
+            </td>
+            <td><button class="btn btn-danger" onclick="deleteRow(this)">Delete</button></td>
+          </tr>
+        `
+      }
+      x+=`
+        <tr class="exclude">
+          <td >
+            Total N° de questions
+          </td>
+          <td colspan="4">
+            <div class="form-group">
+              <input type="number" name="total" class="form-control" required value="0" placeholder="Enter value">
+            </div>
+          </td>
+        </tr>
+        <tr class="exclude">
+          <td>
+            Order Type
+          </td>
+          <td colspan="4">
+            <div class="col d-flex justify-content-around align-items-center">
+              <div class="custom-control custom-radio custom-control-inline">
+                <input type="radio"  id="o0" name="orderType" value="0" class="custom-control-input">
+                <label class="custom-control-label" for="o0">Order</label>
+              </div>
+              <div class="custom-control custom-radio custom-control-inline">
+                <input type="radio" id="o1" name="orderType" value="1" checked class="custom-control-input">
+                <label class="custom-control-label" for="o1">Shuffle</label>
+              </div>
+            </div>
+          </td>
+        </tr>
+        </tbody>
+      </table>`
+      $("#controleForm").html(x)
+    }
+    $(document).ready(function() {
+    $("#sortable").sortable({
+        axis: "y",  
+        containment: "#sortable",  
+        items: 'tr:not(.exclude)',
+        cursor: "cursor",  
+        dropOnEmpty: false,
+        helper: function(e, ui) {
+            ui.children().each(function() {
+                $(this).width($(this).width());
+            });
+            return ui;
+        },
+        opacity: 0.5, 
+        update: function(e, ui) {  
+            $("#sortable tr:not(.exclude)").each(function(index) {
+            });
+        }
+    });
+});
+  })
+  
+
+</script>
+
+{%endblock content %}

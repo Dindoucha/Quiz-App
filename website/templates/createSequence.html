@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+{% block title %} Questions {%endblock title %}
+{% block content %}
+<h1 align="center">Create une sequence</h1>
+<form method="post" id="myForm">
+  <div class="card">
+    <div class="card-header">
+      <div class="input-group w-50 mb-3">
+        <input type="text" id="search" class="form-control" placeholder="Search by Tags" aria-label="Search" aria-describedby="search-icon">
+        <div class="input-group-append">
+          <span class="input-group-text" id="search-icon"><i class="fa fa-search"></i></span>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="input-group mb-3 input-group-lg">
+        <div class="input-group-prepend">
+          <span class="input-group-text" id="inputGroup-sizing-lg">Title</span>
+        </div>
+        <input type="text" name="title" class="form-control" placeholder="Enter title of sequence">
+      </div>
+      <div id="questions" class="row">
+      </div>
+    </div>
+    <div class="card-footer text-muted">
+      <input type="submit" class="btn btn-primary" value="Submit">
+    </div>
+  </div>
+</form>
+<script>
+  let checkedList = [];
+
+  function handleCheckboxChange(event) {
+    let checkbox = event.target;
+    let checkboxValue = checkbox.value;
+    if (checkbox.checked) {
+      checkedList.push(checkboxValue);
+    } else {
+      let index = checkedList.indexOf(checkboxValue);
+      if (index !== -1) {
+        checkedList.splice(index, 1);
+      }
+    }
+  }
+  const questionsDiv = document.getElementById("questions");
+  var searchInput = document.getElementById("search");
+  const queryQuestions = (event) => {
+    var url = '/questions';
+    if (searchInput.value !== "") {
+      url = '/questions?tag=' + searchInput.value;
+    }
+    questionsDiv.innerHTML = ""
+    $.ajax({
+      url: url,
+      method: 'GET',
+      success: function(response) {
+        response.map((item) => {
+          questionsDiv.innerHTML = questionsDiv.innerHTML + `<div class="col-3 my-2">
+						<div class="card">
+						<div class="card-body">
+							<h5 class="card-title">Title : ${item.title}</h5>
+							<p class="mb-2 text-muted">Tags : <span class="badge badge-light">${item.tags.join('</span> <span class="badge badge-light">')}</span></p>
+							<input type="checkbox" onclick="handleCheckboxChange(event)" value="${item.id}" onchange ${checkedList.includes(String(item.id)) ? "checked" : ""} />
+					</div></div>`
+        })
+      }
+    });
+  }
+
+  $(document).ready(() => {
+    queryQuestions()
+  });
+  searchInput.addEventListener("input", queryQuestions);
+  const form = document.querySelector('#myForm');
+  form.addEventListener('submit', function(event) {
+    event.preventDefault(); // prevent the default form submission behavior
+    const formData = new FormData(event.target); // get the form data
+    const urlParams = new URLSearchParams(window.location.search); // get the URL query parameters
+    const myData = {
+      code: urlParams.get("code"),
+      title: formData.get('title'),
+      questions: checkedList
+    };
+    fetch(window.location.origin + window.location.pathname, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(myData)
+      })
+      .then(response => {
+        if (response.ok) {
+          window.location.href = '/order_sequence?code=' + urlParams.get("code");
+        } else {
+          throw new Error('Network response was not ok');
+        }
+      })
+
+  });
+
+</script>
+{%endblock content %}

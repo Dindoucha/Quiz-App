@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% block title %} Order Sequence {%endblock title %}
+{% block content %}
+<h1 align="center">Order sequence</h1>
+
+<div class="card">
+  <div class="card-header">{{sequence.title}}</div>
+  <div class="card-body">
+    <div id="questions" class="row card-dropzone">
+      {% for question in sequence.questions%}
+      <div class="col-3 my-2" id="id{{question.id}}" draggable="true">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Title : {{question.title}}</h5>
+            <p class="mb-2 text-muted">Tags : <span class="badge badge-light"></span></p>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+  <div class="card-footer text-muted">
+    <a href="/" class="btn btn-outline-success mx-auto w-25 d-block">Done</a>
+  </div>
+</div>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Get all the card elements
+    const cards = document.querySelectorAll('.col-3');
+
+    // Set up event listeners for each card element
+    cards.forEach(card => {
+      card.addEventListener('dragstart', dragstart);
+      card.addEventListener('dragover', dragover);
+      card.addEventListener('drop', drop);
+      card.addEventListener('dragend', dragend);
+    });
+
+    // Function to handle the dragstart event
+    function dragstart(e) {
+      e.dataTransfer.setData('text/plain', e.target.id);
+    }
+
+    // Function to handle the dragover event
+    function dragover(e) {
+      e.preventDefault();
+      e.dataTransfer.effectAllowed = 'move';
+      e.dataTransfer.dropEffect = 'move';
+    }
+
+    // Function to handle the drop event
+    function drop(e) {
+      e.preventDefault();
+      const id = e.dataTransfer.getData('text/plain');
+      const draggedCard = document.getElementById(id);
+      const dropzone = e.target.closest('.card-dropzone');
+      const cardsInDropzone = dropzone.querySelectorAll('.col-3');
+      const dropIndex = Array.from(cardsInDropzone).indexOf(e.target);
+      const draggedIndex = Array.from(cardsInDropzone).indexOf(draggedCard);
+      if (dropIndex > draggedIndex) {
+        dropzone.insertBefore(draggedCard, e.target.nextSibling);
+      } else {
+        dropzone.insertBefore(draggedCard, e.target);
+      }
+    }
+
+    // Function to handle the dragend event
+    function dragend(e) {
+      const cards = document.querySelectorAll('.col-3');
+      const cardOrder = [];
+      const urlParams = new URLSearchParams(window.location.search);
+      cards.forEach(card => {
+        cardOrder.push(card.id.substring(2));
+      });
+      const xhr = new XMLHttpRequest();
+      xhr.open('POST', '/order_sequence?code=' + urlParams.get('code'));
+      xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
+      xhr.send(JSON.stringify(cardOrder));
+    }
+  })
+
+</script>
+{%endblock content %}
