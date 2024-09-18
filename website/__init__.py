@@ -1,17 +1,15 @@
 from flask import Flask
 from flask_sqlalchemy import *
-from os import getenv
 from flask_login import LoginManager
-from dotenv import load_dotenv
+from decouple import config
 
-load_dotenv()
 
 db = SQLAlchemy()
 
-DB_USERNAME = getenv('DB_USERNAME')
-DB_PASSWORD = getenv('DB_PASSWORD')
-DB_HOST = getenv('DB_HOST')
-DB_NAME = getenv('DB_NAME')
+DB_USERNAME = config('DB_USERNAME')
+DB_PASSWORD = config('DB_PASSWORD')
+DB_HOST = config('DB_HOST')
+DB_NAME = config('DB_NAME')
 
 def create_app() :
     app = Flask(__name__)
