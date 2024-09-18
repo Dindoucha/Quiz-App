@@ -32,6 +32,7 @@ def logout():
     logout_user()
     return redirect(url_for('authBluprint.login'))
 
+# private route for teachers only because students will be inserted using csv
 @authBluprint.route('/sign_up', methods=['GET', 'POST'])
 def signUp() :
     if request.method =='POST': 
