@@ -37,7 +37,7 @@ def graph(data,filename):
     UPLOAD_FOLDER = os.path.join(APP_ROOT, 'static', 'images')
     graphbytes = data.encode("ascii")
     base64_bytes = base64.urlsafe_b64encode(graphbytes)
-    image_url = "https://mermaid.live/img/"+base64_bytes.decode("ascii")
+    image_url = "https://mermaid.ink/img/"+base64_bytes.decode("ascii")
     headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36"}
     req = urllib.request.Request(image_url, headers=headers)
     with urllib.request.urlopen(req) as url:
