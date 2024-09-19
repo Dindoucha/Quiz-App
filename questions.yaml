@@ -1,0 +1,393 @@
+Questions:
+  UML:
+    1:
+      Content: |
+        # What is the diagram's relationship between the Student and Course classes?
+        ```mermaid
+        classDiagram
+            class Student {
+                +String name
+                +int studentID
+                +String getName()
+                +int getID()
+            }
+
+            class Course {
+                +String courseName
+                +int courseCode
+                +addStudent(Student student)
+                +removeStudent(Student student)
+            }
+
+            Student --> Course : enrolls
+        ```
+      Answers: ["The Student class inherits from the Course class.","The Student class is associated with the Course class.","The Course class is an interface implemented by Student.","The Student class is composed of the Course class."]
+      Correct: 1
+    2:
+      Content: |
+        # What type of relationship is shown between the Customer and BankAccount classes?
+        ```mermaid
+        classDiagram
+            class BankAccount {
+                +int accountNumber
+                +double balance
+                +deposit(amount: double)
+                +withdraw(amount: double)
+            }
+
+            class Customer {
+                +String name
+                +String address
+                +openAccount(BankAccount account)
+                +closeAccount(BankAccount account)
+            }
+
+            Customer "1" -- "*" BankAccount : owns
+        ```
+      Answers: ["Inheritance","Aggregation","Composition","Association"]
+      Correct: 2
+    3:
+      Content: |
+        # What type of relationship exists between the Library and Book classes in the diagram?
+        ```mermaid
+        classDiagram
+          class Library {
+              +String name
+              +String location
+              +addBook(Book book)
+              +removeBook(Book book)
+          }
+
+          class Book {
+              +String title
+              +String author
+              +int ISBN
+          }
+
+          class Member {
+              +String name
+              +int memberID
+              +borrowBook(Book book)
+              +returnBook(Book book)
+          }
+
+          Library "1" -- "*" Book : contains
+          Member "1" -- "*" Book : borrows
+        ```
+      Answers: ["Inheritance","Aggregation","Composition","Association"]
+      Correct: 1
+    4:
+      Content: |
+        # What is the relationship between the Manager and Employee classes in the diagram?
+        ```mermaid
+        classDiagram
+          class Employee {
+              +String name
+              +int employeeID
+              +double getSalary()
+          }
+
+          class Department {
+              +String departmentName
+              +int departmentID
+              +addEmployee(Employee employee)
+              +removeEmployee(Employee employee)
+          }
+
+          class Manager {
+              +String name
+              +int managerID
+              +approveBudget()
+          }
+
+          Department "1" -- "*" Employee : manages
+          Manager <|-- Employee
+        ```
+      Answers: ["Inheritance","Aggregation","Composition","Association"]
+      Correct: 1
+    5:
+      Content: |
+        # What type of relationship exists between the Car and Engine classes in the diagram?
+        ```mermaid
+        classDiagram
+          class Car {
+              +String model
+              +String brand
+              +startEngine()
+              +stopEngine()
+          }
+
+          class Engine {
+              +int horsepower
+              +String type
+              +ignite()
+              +shutdown()
+          }
+
+          class Driver {
+              +String name
+              +String licenseNumber
+              +drive(Car car)
+          }
+
+          Car "1" -- "1" Engine : contains
+          Driver "1" -- "*" Car : drives
+        ```
+      Answers: ["Inheritance","Aggregation","Composition","Association"]
+      Correct: 2
+  Python:
+    1:
+      Content: |
+        # What will be the output of the code?
+        ```python
+        def calculate_sum(a, b=5):
+          return a + b
+
+        result = calculate_sum(10)
+        print(result)
+        ```
+      Answers: ["10","15","5","Error"]
+      Correct: 1
+    2:
+      Content: |
+        # What will be the output of the code?
+        ```python
+        numbers = [1, 2, 3, 4, 5]
+        squared_numbers = [x**2 for x in numbers if x % 2 == 0]
+        print(squared_numbers)
+        ```
+      Answers: ["[1, 4, 9, 16, 25]","[1, 9, 25]","[4, 16]","[2, 4]"]
+      Correct: 2
+    3:
+      Content: |
+        # What will be the output of the code?
+        ```python
+        def append_value(lst, value=None):
+          if value is not None:
+            lst.append(value)
+          return lst
+
+        my_list = [1, 2, 3]
+        result = append_value(my_list, 4)
+        print(result)
+        ```
+      Answers: ["[1, 2, 3]","[1, 2, 3, 4]","[4]","[1, 2, 3, None]"]
+      Correct: 1
+    4:
+      Content: |
+        # What will be the output of the code?
+        ```python
+        def update_dict(d, key, value):
+          d[key] = value
+          return d
+
+        my_dict = {'a': 1, 'b': 2}
+        result = update_dict(my_dict, 'b', 3)
+        print(result)
+        ```
+      Answers: ["{'a': 1, 'b': 2}","{'a': 1, 'b': 3}","{'a': 1, 'b': '3'}","{'a': 1, 'b': 2, '3': 3}"]
+      Correct: 1
+    5:
+      Content: |
+        # What will be the output of the code?
+        ```python
+        def filter_odd_numbers(numbers):
+          return [num for num in numbers if num % 2 != 0]
+
+        nums = [2, 3, 4, 5, 6]
+        filtered = filter_odd_numbers(nums)
+        print(filtered)
+        ```
+      Answers: ["[2, 4, 6]","[3, 5]","[2, 4, 6, 3, 5]","[3, 4, 5]"]
+      Correct: 1
+  PHP:
+    1:
+      Content: |
+        # What will be the output of the code?
+        ```php
+        <?php
+        function multiply($a, $b = 2) {
+          return $a * $b;
+        }
+
+        $result = multiply(5);
+        echo $result;
+        ?>
+        ```
+      Answers: ["5","10","7","Error"]
+      Correct: 1
+    2:
+      Content: |
+        # What will be the output of the code?
+        ```php
+        <?php
+        $array = array(1, 2, 3, 4);
+        $new_array = array_map(function($x) {
+          return $x * $x;
+        }, $array);
+
+        print_r($new_array);
+        ?>
+        ```
+      Answers: ["[1, 4, 9, 16]","[1, 2, 3, 4]","[2, 4, 6, 8]","Array(1, 4, 9, 16)"]
+      Correct: 0
+    3:
+      Content: |
+        # What will be the output of the code?
+        ```php
+        <?php
+        $names = array("Alice", "Bob", "Charlie");
+        $names[] = "David";
+        $names[1] = "Eve";
+
+        print_r($names);
+        ?>
+        ```
+      Answers: ["Array ( [0] => Alice [1] => Bob [2] => Charlie [3] => David )","Array ( [0] => Alice [1] => Eve [2] => Charlie [3] => David )","Array ( [0] => Alice [1] => Eve [2] => David )","Array ( [0] => Alice [1] => Bob [2] => Charlie )"]
+      Correct: 1
+    4:
+      Content: |
+        # What will be the output of the code?
+        ```php
+        <?php
+        function concatenate($str1, $str2 = "World") {
+          return $str1 . " " . $str2;
+        }
+
+        $result = concatenate("Hello");
+        echo $result;
+        ?>
+        ```
+      Answers: ["Hello World","Hello","World Hello","Error"]
+      Correct: 0
+    5:
+      Content: |
+        # What will be the output of the code?
+        ```php
+        <?php
+        $array = array(1, 2, 3, 4);
+        $sum = array_reduce($array, function($carry, $item) {
+          return $carry + $item;
+        }, 0);
+
+        echo $sum;
+        ?>
+        ```
+      Answers: ["10","4","1","0"]
+      Correct: 0
+  JavaScript:
+    1:
+      Content: |
+        # What will be the output of the code?
+        ```js
+        function getGreeting(name = "Guest") {
+          return `Hello, ${name}!`;
+        }
+
+        console.log(getGreeting("Alice"));
+        ```
+      Answers: ["Hello, Guest!","Hello, Alice!","Hello, name!","Hello, !"]
+      Correct: 1
+    2:
+      Content: |
+        # What will be the output of the code?
+        ```js
+        const numbers = [1, 2, 3, 4, 5];
+        const doubled = numbers.map(num => num * 2);
+        console.log(doubled);
+        ```
+      Answers: ["[2, 4, 6, 8, 10]","[1, 2, 3, 4, 5]","[2, 4, 6, 8]","[1, 4, 9, 16, 25]"]
+      Correct: 0
+    3:
+      Content: |
+        # What will be the output of the code?
+        ```js
+        function addToArray(arr, value) {
+          arr.push(value);
+          return arr.length;
+        }
+
+        const myArray = [1, 2, 3];
+        const length = addToArray(myArray, 4);
+        console.log(length);
+        console.log(myArray);
+        ```
+      Answers: ["4 and [1, 2, 3, 4]","3 and [1, 2, 3, 4]","4 and [1, 2, 3]","3 and [1, 2, 3]"]
+      Correct: 0
+    4:
+      Content: |
+        # What will be the output of the code?
+        ```js
+        function filterEvenNumbers(arr) {
+          return arr.filter(num => num % 2 === 0);
+        }
+
+        const numbers = [1, 2, 3, 4, 5, 6];
+        const evenNumbers = filterEvenNumbers(numbers);
+        console.log(evenNumbers);
+        ```
+      Answers: ["[1, 3, 5]","[2, 4, 6]","[1, 2, 3, 4, 5, 6]","[2, 4, 6, 8]"]
+      Correct: 1
+    5:
+      Content: |
+        # What will be the output of the code?
+        ```js
+        const data = [5, 10, 15, 20];
+        const result = data.reduce((accumulator, currentValue) => {
+          return accumulator - currentValue;
+        }, 0);
+
+        console.log(result);
+        ```
+      Answers: ["-50","-40","50","40"]
+      Correct: 0
+  Math:
+    1:
+      Content: |
+        # Solve the following equation for x:
+        $(3x^2 - 5x + 2 = 0)$
+      Answers: ["$(x = 1/3 and x = 2)$","$(x = 1/2 and x = 1)$","$(x = 1 and x = 2/3)$","$(x = 2/3 and x = 1/2)$"]
+      Correct: 3
+    2:
+      Content: |
+        Find the value of y for the function $(f(x)= 2*x^3 - 4*x^2 + x-7)$ at $(x = 2)$
+      Answers: ["$(y=1)$","$(y=-1)$","$(y=3)$","$(y=7)$"]
+      Correct: 1
+    3:
+      Content: |
+        What is the derivative of the function $(f(x)=3*x^2+5*x-4)$ with respect to x?
+      Answers: ["$(f'(x)=6x+5)$","$(f'(x)=6x-5)$","$(f'(x)=3x+5)$","$(f'(x)=2x+5)$"]
+      Correct: 0
+    4:
+      Content: |
+        Solve for x in the equation:
+        $(((2*x+3)/4)=5)$
+      Answers: ["$(x=11)$","$(x=7)$","$(x=8)$","$(x=6)$"]
+      Correct: 1
+  Chemistry:
+    1:
+      Content: |
+        Given the following table of solubility of different salts in water at 25°C, determine which salt has the highest solubility.
+        ```table
+          | Salt | Solubility (g/100 mL) |
+          |------|-----|
+          | Sodium Chloride (NaCl)     | 	36.0    |
+          | Potassium Nitrate (KNO₃)     | 	109.0    |
+          | Calcium Sulfate (CaSO₄)    | 	0.2   |
+          | Magnesium Sulfate (MgSO₄)    | 35.0  |
+        ```
+      Answers: ["Sodium Chloride (NaCl)","Potassium Nitrate (KNO₃)","Calcium Sulfate (CaSO₄)","Magnesium Sulfate (MgSO₄)"]
+      Correct: 1
+    2:
+      Content: |
+        Using the table below, determine the molarity of each solution if the total volume is 1 liter.
+        ```table
+          | Solute | Mass (g) | Molar Mass (g/mol) |
+          |------|-----|------|
+          | Sodium Hydroxide (NaOH)     | 40   |   40.0    |
+          | Potassium Chloride (KCl)    | 74 |   74.0     |
+          | Calcium Chloride (CaCl₂)    | 147 | 147.0     |
+          | Ammonium Nitrate (NH₄NO₃)   | 80 |   	80.0 |
+        ```
+      Answers: ["(NaOH): 1.0 M;(KCl): 1.0 M;(CaCl₂): 1.0 M;(NH₄NO₃): 1.0 M","(NaOH): 0.5 M;(KCl): 0.5 M;(CaCl₂): 0.5 M;(NH₄NO₃): 0.5 M","(NaOH): 1.0 M;(KCl): 0.5 M;(CaCl₂): 0.68 M;(NH₄NO₃): 1.0 M","(NaOH): 0.8 M;(KCl): 1.0 M;(CaCl₂): 1.0 M;(NH₄NO₃): 0.8 M"]
+      Correct: 0

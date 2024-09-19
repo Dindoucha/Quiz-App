@@ -11,8 +11,10 @@ import random
 import string
 import urllib.request
 import os
+import re
 
 def latexEquations(equation):
+    print(equation)
     return latex2mathml.converter.convert(equation)
 
 def table2html(tableMD):
@@ -23,6 +25,10 @@ def highlight_code(code, lang):
         lexer = get_lexer_by_name('python', stripall=True)
     elif lang.startswith('javascript'):
         lexer = get_lexer_by_name('javascript', stripall=True)
+    elif lang.startswith('java'):
+        lexer = get_lexer_by_name('java', stripall=True)
+    elif lang.startswith('php'):
+        lexer = get_lexer_by_name('php', stripall=True)
     else:
         lexer = get_lexer_by_name('text', stripall=True)
 
@@ -117,14 +123,13 @@ def md2html(mdString,code=None):
 
         # Adding lines while in table block
         if in_table_block:
-            table_lines.append(line)
+            table_lines.append(line.strip())
             continue
         if '$' in line:
             line = line.strip()
         print(line)
-        if line.startswith("$") and line.endswith("$"):
-            line = line.strip("$")
-            htmlCode += latexEquations(line) + "<br>"
+        if "$(" in line and ")$" in line:
+            htmlCode += re.sub(r'\$\((.*?)\)\$', lambda match: latexEquations(match.group(1)), line) + "<br>"
             continue
         
         htmlCode += markdown.markdown(line)
