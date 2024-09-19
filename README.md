@@ -11,7 +11,7 @@ The Online Quiz App allows teachers to manage quizzes and exams, while students 
   ![Add Question Example](README/add_question.png "Title")
   - **Add Exam**: Generating Basic or Advanced Exams and you can drag and drop tags to make them in order or choose shuffle to randomize them, Check PDFs in README to see example of Exams.
   ![Add Question Example](README/generate_exam.png "Title")
-  - **Add Sequence of Questions**: Create sequences of questions for exams.
+  - **Add Sequence of Questions**: Create sequences of questions for live answering and following with teacher (See live sequence on README folder).
   - **CRUD Operations**: Perform create, read, update, and delete operations on questions, exams, and sequences.
 
 - **Students**:

@@ -76,7 +76,7 @@ def showQuestion():
     sequenceCode = request.args.get('sequence')
     user = User.query.filter_by(id=current_user.id).first()
     if user.is_teacher:
-        flash('you may say inactive questions Logged in as admin',category='success')
+        flash('you may see inactive questions Logged in as admin',category='success')
     if sequenceCode:
         sequence = Sequence.query.filter_by(code = sequenceCode).first()
         if not sequence:
